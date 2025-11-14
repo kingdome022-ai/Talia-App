@@ -1,0 +1,23 @@
+name: Deploy to Expo
+
+on:
+  push:
+    branches:
+      - main  # عند حدوث تغييرات في الفرع الرئيسي main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2  # لاستنساخ مستودع الشيفرة
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # اختر الإصدار الذي تعمل عليه
+      - name: Install dependencies
+        run: npm install  # تثبيت التبعيات
+      - name: Deploy to Expo
+        run: |
+          npm install -g eas-cli  # تثبيت eas-cli
+          eas login --token ${{ secrets.EAS_TOKEN }}  # تسجيل الدخول باستخدام الـ token المخزن في GitHub Secrets
+          eas build --platform ios --non-interactive  # بناء التطبيق لمنصة iOS
